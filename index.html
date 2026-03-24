@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Yranto — лучший стример</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: black;
+        color: white;
+        overflow-x: hidden;
+    }
+
+    .bg {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(270deg, #0f0c29, #302b63, #24243e);
+        background-size: 600% 600%;
+        animation: gradientMove 10s ease infinite;
+        z-index: -1;
+    }
+
+    @keyframes gradientMove {
+        0% {background-position: 0% 50%;}
+        50% {background-position: 100% 50%;}
+        100% {background-position: 0% 50%;}
+    }
+
+    header {
+        text-align: center;
+        padding: 30px;
+        font-size: 40px;
+        color: #9146ff;
+        text-shadow: 0 0 20px #9146ff;
+    }
+
+    .profile {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 3px solid #9146ff;
+        box-shadow: 0 0 20px #9146ff;
+    }
+
+    .nickname {
+        font-size: 28px;
+        margin-top: 10px;
+    }
+
+    .bio {
+        opacity: 0.7;
+        margin-bottom: 20px;
+    }
+
+    .container {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .card {
+        background: rgba(255,255,255,0.05);
+        margin: 20px auto;
+        padding: 25px;
+        border-radius: 15px;
+        width: 60%;
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px #9146ff;
+    }
+
+    iframe {
+        margin-top: 30px;
+        border-radius: 15px;
+        width: 80%;
+        height: 400px;
+    }
+
+    .btn {
+        margin-top: 20px;
+        padding: 15px 30px;
+        font-size: 18px;
+        border: none;
+        border-radius: 10px;
+        background: #9146ff;
+        color: white;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background: #772ce8;
+        box-shadow: 0 0 15px #9146ff;
+    }
+
+    footer {
+        margin-top: 40px;
+        padding: 20px;
+        text-align: center;
+        opacity: 0.6;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<header>
+    🔥 Yranto — лучший стример 🔥
+</header>
+
+<!-- ПРОФИЛЬ -->
+<div class="profile">
+    <img class="avatar" id="avatar">
+    <div class="nickname">Yranto</div>
+    <div class="bio">🎮 Стример | 😂 Юмор | 💬 Общение с чатом</div>
+</div>
+
+<div class="container">
+
+    <!-- СТАТУС -->
+    <div id="streamInfo" class="card">
+        <h2>📡 Статус стрима</h2>
+        <p id="status">Загрузка...</p>
+        <p id="game"></p>
+        <p id="viewers"></p>
+    </div>
+
+    <div class="card">
+        <h2>🎮 Контент</h2>
+        <p>Каждый стрим — это эмоции, угар и топ игры.</p>
+    </div>
+
+    <div class="card">
+        <h2>😂 Юмор</h2>
+        <p>Ты не уйдёшь без смеха ведь эта макака </p>
+    </div>
+
+    <div class="card">
+        <h2>💬 Комьюнити</h2>
+        <p>Один из самых живых чатов даст совет и просто поможет
+        </p>
+    </div>
+
+    <!-- СТРИМ -->
+    <iframe
+        src="https://player.twitch.tv/?channel=Yranto&parent=127.0.0.1"
+        allowfullscreen>
+    </iframe>
+
+    <br>
+
+    <a href="https://twitch.tv/Yranto" target="_blank">
+        <button class="btn">👉 Перейти на Twitch</button>
+    </a>
+
+</div>
+
+<footer>
+    Сделано фанатом 😎
+    написать лучшему модеру в лс @Rainshadezxc
+</footer>
+
+<script>
+/* АВАТАР */
+async function loadAvatar() {
+    try {
+        const res = await fetch("https://decapi.me/twitch/avatar/Yranto");
+        const url = await res.text();
+        document.getElementById("avatar").src = url;
+    } catch {
+        document.getElementById("avatar").src = "https://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_70x70.png";
+    }
+}
+
+/* СТРИМ */
+async function loadStreamData() {
+    try {
+        const statusRes = await fetch("https://decapi.me/twitch/uptime/Yranto");
+        const statusText = await statusRes.text();
+
+        if (statusText.includes("offline")) {
+            document.getElementById("status").innerText = "🔴 Оффлайн";
+        } else {
+            document.getElementById("status").innerText = "🟢 Онлайн: " + statusText;
+
+            const gameRes = await fetch("https://decapi.me/twitch/game/Yranto");
+            document.getElementById("game").innerText = "🎮 Игра: " + await gameRes.text();
+
+            const viewersRes = await fetch("https://decapi.me/twitch/viewercount/Yranto");
+            document.getElementById("viewers").innerText = "👀 Зрителей: " + await viewersRes.text();
+        }
+    } catch {
+        document.getElementById("status").innerText = "Ошибка загрузки 😢";
+    }
+}
+
+loadAvatar();
+loadStreamData();
+</script>
+
+</body>
+</html>
